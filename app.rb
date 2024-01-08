@@ -1,9 +1,15 @@
 require 'sinatra'
 require 'configcat'
 require 'dotenv'
+require 'sinatra/reloader' if development?
 
 # Load environment variables from .env file
 Dotenv.load
+
+# Sinatra - Configure hot reloading
+configure :development do
+  register Sinatra::Reloader
+end
 
 # ConfigCat client initialization
 configcat_client = ConfigCat.get(
