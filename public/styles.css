@@ -127,6 +127,12 @@ a {
   color: black;
 }
 
+.red-button {
+  background-color: #ff0000;
+  color: #fff;
+  border: 2px solid white;
+}
+
 /* Media Queries */
 
 @media screen and (max-width: 768px) {
