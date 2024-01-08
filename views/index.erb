@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A/B Testing in Ruby | Demo</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <script type="text/javascript" src="https://cdn.amplitude.com/libs/amplitude-7.2.1-min.gz.js"></script>
+    <script type="text/javascript">
+        amplitude.getInstance().init("<%= ENV['AMPLITUDE_API_KEY'] %>");
+    </script>
+</head>
+<body>
+    <h1>Welcome to my first Sinatra app!</h1>
+    <% if @is_my_feature_flag_enabled %>
+        <button class="button blue-button" id="blueCTAButton" onclick="trackBlueCTAButtonClick()">Blue button</button>
+    <% else %>
+        <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Red button</button>
+    <% end %>
+
+    <script type="text/javascript">
+      function trackBlueCTAButtonClick() {
+        amplitude.getInstance().logEvent('BLUE_CTA_BUTTON_CLICKED');
+      }
+      function trackRedCTAButtonClick() {
+        amplitude.getInstance().logEvent('RED_CTA_BUTTON_CLICKED');
+      }
+    </script>
+</body>
+</html>
