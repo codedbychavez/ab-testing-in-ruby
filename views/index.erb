@@ -50,7 +50,7 @@
             </div>
             <div class="cta-button-wrapper">
               <% if @is_my_feature_flag_enabled %>
-                <button class="button white-button" id="whiteCTAButton" onclick="trackBlueCTAButtonClick()">Download Now</button>
+                <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
               <% else %>
                 <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Download Now</button>
               <% end %>
@@ -60,8 +60,8 @@
       </div>
     </section>
     <script type="text/javascript">
-      function trackBlueCTAButtonClick() {
-        amplitude.getInstance().logEvent('BLUE_CTA_BUTTON_CLICKED');
+      function trackWhiteCTAButtonClick() {
+        amplitude.getInstance().logEvent('WHITE_CTA_BUTTON_CLICKED');
       }
       function trackRedCTAButtonClick() {
         amplitude.getInstance().logEvent('RED_CTA_BUTTON_CLICKED');
