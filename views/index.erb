@@ -1,29 +1,64 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>A/B Testing in Ruby | Demo</title>
     <link rel="stylesheet" type="text/css" href="/styles.css">
     <script type="text/javascript" src="https://cdn.amplitude.com/libs/amplitude-7.2.1-min.gz.js"></script>
     <script type="text/javascript">
-        amplitude.getInstance().init("<%= ENV['AMPLITUDE_API_KEY'] %>");
+      amplitude.getInstance().init("<%= ENV['AMPLITUDE_API_KEY'] %>");
     </script>
-</head>
-<body>
+  </head>
+  <body>
     <header class="header">
-        <div class="navbar">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="/">
-                    <img src="/logo.png" alt="A/B Testing in Ruby" width="112" height="28">
-                </a>
-            </div>
+      <div class="container navbar">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="/">
+            <img src="/logo.png" alt="A/B Testing in Ruby" width="45">
+          </a>
         </div>
+        <div class="navlinks-wrapper">
+          <ul class="nav-links">
+            <li class="nav-link">
+              <a href="#">About</a>
+            </li>
+            <li class="nav-link">
+              <a href="#">Pricing</a>
+            </li>
+            <li class="nav-link">
+              <a href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </header>
-    <% if @is_my_feature_flag_enabled %>
-        <button class="button blue-button" id="blueCTAButton" onclick="trackBlueCTAButtonClick()">Blue button</button>
-    <% else %>
-        <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Red button</button>
-    <% end %>
-
+    <section class="hero-section">
+      <div class="container">
+        <div class="columns">
+          <div class="col-1">
+            <div class="image-wrapper">
+              <img class="hero-image" src="/hero-image.svg" alt="Hero Image" width="500">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="text-container">
+              <p class="small-text">
+                Get started today
+              </p>
+              <h1 class="title">
+                All Your Books and Notes - In One Place, At Your Fingertips.
+              </h1>
+            </div>
+            <div class="cta-button-wrapper">
+              <% if @is_my_feature_flag_enabled %>
+                <button class="button white-button" id="whiteCTAButton" onclick="trackBlueCTAButtonClick()">Download Now</button>
+              <% else %>
+                <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Download Now</button>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <script type="text/javascript">
       function trackBlueCTAButtonClick() {
         amplitude.getInstance().logEvent('BLUE_CTA_BUTTON_CLICKED');
@@ -32,5 +67,5 @@
         amplitude.getInstance().logEvent('RED_CTA_BUTTON_CLICKED');
       }
     </script>
-</body>
+  </body>
 </html>
