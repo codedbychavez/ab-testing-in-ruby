@@ -2,7 +2,9 @@
 
 How to Implement A/B Testing in Ruby with ConfigCat Feature Flags and Amplitude Data Analytics Platform
 
-## Setup: WIP
+## Introduction
+
+Conducting an A/B Test experiment is a great way to determine how a specific version of a feature resonates with your users. Its is one way 
 
 Here we're going to use a simple framework called Sinatra to create a simple landing page with a blue colored Call to action button. We will use ConfigCat to change the color of the button to red and track the conversion rate of the two variants with Amplitude.
 
