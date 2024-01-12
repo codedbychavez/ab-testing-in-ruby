@@ -54,9 +54,9 @@ With the power of a feature flag and user segmentation, we can simply have a sin
 ```html
 <div class="cta-button-wrapper">
     <% if @is_my_feature_flag_enabled %>
-        <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
-    <% else %>
         <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Download Now</button>
+    <% else %>
+        <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
     <% end %>
 </div>
 ```
@@ -80,6 +80,13 @@ bundle install
 ruby app.rb
 ```
 
+3. Create a `.env` file in the root directory of the repo and add the following environment variables:
+
+```sh
+AMPLITUDE_API_KEY="YOUR-AMPLITUDE-API-KEY-GOES-HERE"
+CONFIGCAT_SDK_KEY="YOUR-CONFIGCAT-SDK-KEY-GOES-HERE"
+```
+
 If all goes well, you should be able to see the landing page at <http://localhost:4567/>
 
 ### Adding the feature flag
@@ -90,7 +97,9 @@ If all goes well, you should be able to see the landing page at <http://localhos
 
 <!-- image: add the relevant images -->
 
-3. To create the two user groups, we'll need to create two user segments. This can be done by clicking the **target segment** button then selecting **Manage segments** from the dropdown menu:
+3. Copy your ConfigCat SDK key by clicking the **View SDK Key** button in the top right corner of the dashboard.
+
+4. To create the two user groups, we'll need to create two user segments. This can be done by clicking the **target segment** button then selecting **Manage segments** from the dropdown menu:
 
 <!-- image: clicks-to-create-user-segments -->
 
@@ -132,7 +141,7 @@ For cc to know which version to show a specific version to, it will need to know
 
 # ConfigCat client initialization
 configcat_client = ConfigCat.get(
-  ENV['CONFIGCAT_SDK_KEY_GOES_HERE']
+  ENV['CONFIGCAT_SDK_KEY']
 )
 
 
@@ -163,60 +172,72 @@ But there is one more thing we need to do. We need to track the number of clicks
 
 ### Tracking the results with Amplitude
 
-<!-- todo: setting up amplitude
-
-- Creating an account
-
-- Creating an organization
-
-- Creating a project
-
-- Adding the SDK to the project
-
-- Creating a chart to visualize the results
-
-- Sending the results to amplitude
-
-- Viewing the results on amplitude, filtering by uniques
-
-- How to know which version is better
-
- -->
-
-## Best practices and tips
-
-## Conclusion
-
-<!-- todo: call to action -->
-
-### Other stuff
-
-<!-- TODO: May need to reuse the Amplitude stuff below -->
-
-Here we're going to use a simple framework called Sinatra to create a simple landing page with a white colored Call to action button. We will use ConfigCat to change the color of the button to red and track the conversion rate of the two variants with Amplitude.
-
-## Getting started with Amplitude
-
 1. Create a free account on [Amplitude](https://amplitude.com/)
 
-2. On the home page, which should have the following url: <https://app.amplitude.com/analytics/YOUR-USERNAME/home>
+2. On the home page, which should have the following url: <https://app.amplitude.com/analytics/YOUR-USERNAME/home>, navigate to your **Organization settings** by clicking on the gear icon at the top right corner of the page, Click on the **Projects** in the left sidebar, then click **Create Project** button to create a project:
 
-3. Create a new project, Navigate to your organization settings by clicking on the gear icon at the top right corner of the page, then click on the "Projects" in the left sidebar. Click on the "New Project" button to create a project with the following details:
-
-<!-- Add image: Creating a new project on Amplitude -->
+<!-- image: create-new-project-in-amplitude -->
 
 4. Select the data source and SDK to use. In this case case, we'll be using the browser SDK.
 
-<!-- TD: Add image here -->
+<!-- image: select-data-source-sdk -->
 
 5. To view the click events from each button on the landing page, we'll need to create a chart to visualize the clicks from each button. Click the "Create" button on the top left corner and select "Chart":
 
-<!-- TODO: Add image of sidebar for creating a new chart -->
+<!-- image: amplitude-creating-a-new-chart -->
 
-6. Choose "Segmentation" so that the chart can segment events based on filters and metrics.
+6. Select "Segmentation" so that the chart can segment events based on filters and metrics.
 
-## Run the app
+<!-- image: amplitude-select-segmentation -->
 
-```sh
-ruby landing_page.rb
+7. Copy your Amplitude API key from the project settings page and paste it in the `.env` file.
+
+8. Add two script tags to the head of `index.erb` file to link to the Amplitude SDK and initialize it with your Amplitude API key:
+
+```html
+  <head>
+    <!-- ... -->
+    <script type="text/javascript" src="https://cdn.amplitude.com/libs/amplitude-7.2.1-min.gz.js"></script>
+    <script type="text/javascript">
+      amplitude.getInstance().init("<%= ENV['AMPLITUDE_API_KEY'] %>");
+    </script>
+  </head>
 ```
+
+9. Before the closing body tag, add the following script for tracking the clicks from each button:
+
+```html
+<body>
+    <script type="text/javascript">
+      function trackWhiteCTAButtonClick() {
+        amplitude.getInstance().logEvent('WHITE_CTA_BUTTON_CLICKED');
+      }
+      function trackRedCTAButtonClick() {
+        amplitude.getInstance().logEvent('RED_CTA_BUTTON_CLICKED');
+      }
+    </script>
+    </body>
+```
+
+From the above you can see that the white button will send an event called `WHITE_CTA_BUTTON_CLICKED` and the red button will send an event called `RED_CTA_BUTTON_CLICKED`. This is how we'll be able to differentiate the clicks from each button.
+
+<!-- todo: add the link to the index.erb file here from the configcat code sample repo -->
+The complete code for `index.erb` can be found [here]('').
+
+#### Viewing the results in Amplitude
+
+1. Modify the the user object so that the country is set to Hungary, click the white button five times. Do the same for France and the red button. If all goes well, you should see both events in Amplitude.
+
+Keep in mind that it may take a few minutes for the events to show up in Amplitude and you'll need to select the correct options in the left sidebar to see the events as shown below:
+
+<!-- image: amplitude-chart-ab-comparison -->
+
+Based on the results of the chart, we can see that the red button has a higher conversion rate than the white button. This means that the red button is more effective at getting users to click on it. This is a good indicator that the red button is the better option and version B should be the one to be deployed to all users.
+
+## Conclusion
+
+In this tutorial, we learned how to implement A/B testing in Ruby using ConfigCat Feature Flags and Amplitude Data Analytics Platform. We learned how to create a feature flag in ConfigCat, how to segment users into groups, how to integrate the feature flag into the Ruby code, and how to track the results with Amplitude. We also learned how to use the results to make a decision on which version of the landing page to deploy to all users.
+
+If you decide to tinker and try implementing this on your own, I'd recommend signing up for a [free account on ConfigCat](https://app.configcat.com/auth/signup) and [Amplitude](https://amplitude.com/). ConfigCat has a generous free tier that allows you to start using feature flags for free.
+
+stay on top of the latest posts and announcements from ConfigCat on [X](https://twitter.com/configcat), [Facebook](https://www.facebook.com/configcat), [LinkedIn](https://www.linkedin.com/company/configcat/), and [GitHub](https://github.com/configcat).
