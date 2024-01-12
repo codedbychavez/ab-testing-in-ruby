@@ -5,8 +5,7 @@ Description: A step-by-step guide on how to Implement A/B Testing in Ruby using 
 
 ## Introduction
 
-Conducting an A/B Test experiment is a great way to find out what version of a feature works best for your users. It is a method that is essential to the success of any product and business. Implementing it can be a bit tricky and time consuming, but it doesn't have to be. Coming up, for the Ruby developers out there, I'll show you how to conduct an A/B test experiment in Ruby using ConfigCat Feature Flags and Record the results with Amplitude Data Analytics Platform. Let's get started!
-
+Conducting an A/B Test experiment is a great way to find out what version of a feature works best for your users. It is a method that is essential to the success of any product and business. Implementing it can be a bit tricky and time consuming, but it doesn't have to be if the right tools are used. Coming up, for the Ruby developers out there, I'll show you how to conduct an A/B test experiment in Ruby using ConfigCat Feature Flags and Record the results with Amplitude Data Analytics Platform. Let's get started!
 
 ## Overview - Getting familiar with the concepts
 
@@ -14,7 +13,12 @@ Conducting an A/B Test experiment is a great way to find out what version of a f
 
 <!-- TODO: Explain A/B testing using a simple analogy -->
 
-<!-- TODO: Introduce the Hypothesis -->
+Picture a scenario where you are a founder at a new mobile app tech startup and you're looking to increase the number of users that sign up for your app. Your have team presented you with two landing page designs that you plan to deploy to collect user signups. One of the designs has a blue colored Call to action button and the other has a red colored Call to action button. You're not sure which one will work best for your users. This is where an A/B test experiment comes in useful. 
+
+An A/B test experiment is a method of comparing two versions of something to figure out which one performs better. In this case, we want to know which version of the landing page will result in more user signups. To do this, we'll need to deploy the two versions of the landing page, one with the blue CTA button and the other with the CTA red button. We'll then show each version to
+two different groups of users and track the number of signups from each group. The version with the highest number of signups wins.
+
+<!-- todo: Show the two versions side by side  -->
 
 
 ### How does feature flagging work?
