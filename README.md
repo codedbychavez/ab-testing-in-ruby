@@ -11,9 +11,7 @@ Conducting an A/B Test experiment is a great way to find out what version of a f
 
 ### What is A/B Testing?
 
-<!-- TODO: Explain A/B testing using a simple analogy -->
-
-Picture a scenario where you are a founder at a new mobile app tech startup and you're looking to increase the number of users that sign up for your app. Your have team presented you with two landing page designs that you plan to deploy to collect user signups. One of the designs has a white colored Call to action button and the other has a red colored Call to action button. You're not sure which one will work best for your users. This is where an A/B test experiment comes in useful. 
+Picture a scenario where you are a founder at a new mobile app tech startup and you're looking to increase the number of users that sign up for your app. Your have team presented you with two landing page designs that you plan to deploy to collect user signups. One of the designs has a white colored Call to action button and the other has a red colored Call to action button. You're not sure which one will work best for your users. This is where an A/B test experiment comes in useful.
 
 An A/B test experiment is a method of comparing two versions of something to figure out which one performs better. In this case, we want to know which version of the landing page will result in more user signups. To do this, we'll need to deploy the two versions of the landing page, one with the white CTA button and the other with the CTA red button. We'll then show each version to
 two different groups of users and track the number of signups from each group. The version with the highest number of signups wins.
@@ -46,51 +44,122 @@ Here are the things you'll need to get started and follow along:
 
 ## Live Demo
 
-<!-- TODO: Image of the two versions side by side -->
+Now that we have all the resources we need, let's take a look at the live demo of the landing page. Here is a side by side comparison of the two versions of the landing page:
 
-<!-- TODO: Add code snippet that represents the buttons -->
+<!-- image: of the two versions side by side -->
 
+<!-- todo: add links to documentation -->
+With the power of a feature flag and user segmentation, we can simply have a single code base, but to users in different countries, it will appear as if there are two different versions of the landing page. Here is a snippet of the code that makes this possible using an If/Else statement to show one of the buttons and hide the other:
 
-<!-- TODO: Explain how feature flags can be used to show one of the buttons and hide
-the other when the feature flag saved -->
+```html
+<div class="cta-button-wrapper">
+    <% if @is_my_feature_flag_enabled %>
+        <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
+    <% else %>
+        <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Download Now</button>
+    <% end %>
+</div>
+```
+
+### Starter code
+
+<!-- todo: Add link to starter code here -->
+To follow along, you can clone the starter code from [here](''). As we explore the upcoming parts in this section, I'll point out the relevant parts of the code to update.
+
+### Setting up the landing page
+
+1. Install the Gemfile dependencies by running the following command in the terminal in the root directory of the repo:
+
+```sh
+bundle install
+```
+
+2. Check to see if the app is running by running the following command in the terminal in the root directory of the repo:
+
+```sh
+ruby app.rb
+```
+
+If all goes well, you should be able to see the landing page at <http://localhost:4567/>
 
 ### Adding the feature flag
 
-<!-- TODO: Creating a ConfigCat account -->
+1. Create a free account on [ConfigCat](https://app.configcat.com/auth/signup)
 
-<!-- TODO: Add the relevant images -->
+2. Create a feature flag with the following details:
 
-### Updating the code
+<!-- image: add the relevant images -->
 
-<!-- TODO: Update the code to include the feature flag that was created -->
+3. To create the two user groups, we'll need to create two user segments. This can be done by clicking the **target segment** button then selecting **Manage segments** from the dropdown menu:
 
-<!-- todo: talk about switching between version a/b -->
+<!-- image: clicks-to-create-user-segments -->
 
-### User segmentation and targeting
+Create two user segments with the following details:
 
-<!-- todo: explain the importance of segmentation in a/b testing. -->
+<!-- image: combined edits of user segments from cc dashboard -->
 
-<!-- todo: mention that we need two user groups for showing each version to 
-. I'll decide on the user groups based on the user's country
-I'll show the white button (Version A) to users in the France and the red button (Version B) to users in Hungary.
+Users in Hungary (Group A) will see Version A (white CTA button) and users in France (Group B) will see Version B (red CTA button). To make this possible, we'll need to update the code to include the feature flag.
 
- -->
+### Integrating the feature flag into the Ruby code
 
-<!-- todo: segway into configuring segmentation in the ConfigCat -->
+Now that we have the feature flag created, we'll need to update the code to include the feature flag. Here is how the code will `app.rb` file will look like:
 
+```ruby
+# app.rb
+
+# ...
+
+# ConfigCat client initialization
+configcat_client = ConfigCat.get(
+  ENV['CONFIGCAT_SDK_KEY_GOES_HERE']
+)
+
+get '/' do
+  # Create a variable to store the value of the feature flag
+  @is_my_feature_flag_enabled = configcat_client.get_value('myfeatureflag', false, user_object)
+  erb :index
+end
+```
 
 ### User Object
 
-<!-- todo: for cc to know which country the user is from, i'll need to send details about the user in a User Object. Here is how the user object looks like 
+For cc to know which version to show a specific version to, it will need to know what country the user is from, This can be done by sending attributes about the user in a User Object. Let's add a user object to the code:
 
--->
+```ruby
+# app.rb
+
+# ...
+
+# ConfigCat client initialization
+configcat_client = ConfigCat.get(
+  ENV['CONFIGCAT_SDK_KEY_GOES_HERE']
+)
+
+
+# Create a user object to identify the user
+user_object = ConfigCat::User.new(
+  '7b8c03a6-502d-4d6b-8d67-fc5e1a2b9a94',
+  email: 'john@example',
+  country: 'France',
+)
+
+# ...
+
+```
+
 ### Did it work?
 
-<!-- todo: show switching between the two version by updating the country's value in the User Object 
+This is a good way to see if the feature flag is working as expected. If all goes well, you should see the two versions of the landing page when you update the country in the user object.
 
-mention that this is a good way to see if the feature flag is working as expected. 
+When France is set as the country, you should see Version B (red CTA button):
 
--->
+<!-- image: of version B -->
+
+When Hungary is set as the country, you should see Version A (white CTA button):
+
+<!-- image: of version A -->
+
+But there is one more thing we need to do. We need to track the number of clicks from each button. This is where Amplitude comes in. Lets take a look at how to set it up.
 
 ### Tracking the results with Amplitude
 
@@ -104,7 +173,6 @@ mention that this is a good way to see if the feature flag is working as expecte
 
 - Adding the SDK to the project
 
-
 - Creating a chart to visualize the results
 
 - Sending the results to amplitude
@@ -117,24 +185,19 @@ mention that this is a good way to see if the feature flag is working as expecte
 
 ## Best practices and tips
 
-
 ## Conclusion
 
 <!-- todo: call to action -->
 
 ### Other stuff
 
-
 <!-- TODO: May need to reuse the Amplitude stuff below -->
 
-
 Here we're going to use a simple framework called Sinatra to create a simple landing page with a white colored Call to action button. We will use ConfigCat to change the color of the button to red and track the conversion rate of the two variants with Amplitude.
-
 
 ## Getting started with Amplitude
 
 1. Create a free account on [Amplitude](https://amplitude.com/)
-
 
 2. On the home page, which should have the following url: <https://app.amplitude.com/analytics/YOUR-USERNAME/home>
 
@@ -151,8 +214,6 @@ Here we're going to use a simple framework called Sinatra to create a simple lan
 <!-- TODO: Add image of sidebar for creating a new chart -->
 
 6. Choose "Segmentation" so that the chart can segment events based on filters and metrics.
-
-
 
 ## Run the app
 
