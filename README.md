@@ -80,6 +80,13 @@ bundle install
 ruby app.rb
 ```
 
+3. Create a `.env` file in the root directory of the repo and add the following environment variables:
+
+```sh
+AMPLITUDE_API_KEY="YOUR-AMPLITUDE-API-KEY-GOES-HERE"
+CONFIGCAT_SDK_KEY="YOUR-CONFIGCAT-SDK-KEY-GOES-HERE"
+```
+
 If all goes well, you should be able to see the landing page at <http://localhost:4567/>
 
 ### Adding the feature flag
@@ -90,7 +97,9 @@ If all goes well, you should be able to see the landing page at <http://localhos
 
 <!-- image: add the relevant images -->
 
-3. To create the two user groups, we'll need to create two user segments. This can be done by clicking the **target segment** button then selecting **Manage segments** from the dropdown menu:
+3. Copy your ConfigCat SDK key by clicking the **View SDK Key** button in the top right corner of the dashboard.
+
+4. To create the two user groups, we'll need to create two user segments. This can be done by clicking the **target segment** button then selecting **Manage segments** from the dropdown menu:
 
 <!-- image: clicks-to-create-user-segments -->
 
@@ -132,7 +141,7 @@ For cc to know which version to show a specific version to, it will need to know
 
 # ConfigCat client initialization
 configcat_client = ConfigCat.get(
-  ENV['CONFIGCAT_SDK_KEY_GOES_HERE']
+  ENV['CONFIGCAT_SDK_KEY']
 )
 
 
@@ -163,13 +172,59 @@ But there is one more thing we need to do. We need to track the number of clicks
 
 ### Tracking the results with Amplitude
 
-<!-- todo: setting up amplitude
+1. Create a free account on [Amplitude](https://amplitude.com/)
 
-- Creating an account
+2. On the home page, which should have the following url: <https://app.amplitude.com/analytics/YOUR-USERNAME/home>, navigate to your **Organization settings** by clicking on the gear icon at the top right corner of the page, Click on the **Projects** in the left sidebar, then click **Create Project** button to create a project:
 
-- Creating an organization
+<!-- image: create-new-project-in-amplitude -->
 
-- Creating a project
+4. Select the data source and SDK to use. In this case case, we'll be using the browser SDK.
+
+<!-- image: select-data-source-sdk -->
+
+5. To view the click events from each button on the landing page, we'll need to create a chart to visualize the clicks from each button. Click the "Create" button on the top left corner and select "Chart":
+
+<!-- image: amplitude-creating-a-new-chart -->
+
+6. Select "Segmentation" so that the chart can segment events based on filters and metrics.
+
+<!-- image: amplitude-select-segmentation -->
+
+7. Copy your Amplitude API key from the project settings page and paste it in the `.env` file.
+
+8. Add two script tags to the head of `index.erb` file to link to the Amplitude SDK and initialize it with your Amplitude API key:
+
+```html
+  <head>
+    <!-- ... -->
+    <script type="text/javascript" src="https://cdn.amplitude.com/libs/amplitude-7.2.1-min.gz.js"></script>
+    <script type="text/javascript">
+      amplitude.getInstance().init("<%= ENV['AMPLITUDE_API_KEY'] %>");
+    </script>
+  </head>
+```
+
+9. Before the closing body tag, add the following scripts for tracking the clicks from each button:
+
+```html
+<body>
+    <script type="text/javascript">
+      function trackWhiteCTAButtonClick() {
+        amplitude.getInstance().logEvent('WHITE_CTA_BUTTON_CLICKED');
+      }
+      function trackRedCTAButtonClick() {
+        amplitude.getInstance().logEvent('RED_CTA_BUTTON_CLICKED');
+      }
+    </script>
+    </body>
+```
+
+<!-- todo: add the link to the index.erb file here from the configcat code sample repo -->
+The complete code for `index.erb` can be found [here]('').
+
+
+
+<!-- todo:
 
 - Adding the SDK to the project
 
@@ -194,26 +249,6 @@ But there is one more thing we need to do. We need to track the number of clicks
 <!-- TODO: May need to reuse the Amplitude stuff below -->
 
 Here we're going to use a simple framework called Sinatra to create a simple landing page with a white colored Call to action button. We will use ConfigCat to change the color of the button to red and track the conversion rate of the two variants with Amplitude.
-
-## Getting started with Amplitude
-
-1. Create a free account on [Amplitude](https://amplitude.com/)
-
-2. On the home page, which should have the following url: <https://app.amplitude.com/analytics/YOUR-USERNAME/home>
-
-3. Create a new project, Navigate to your organization settings by clicking on the gear icon at the top right corner of the page, then click on the "Projects" in the left sidebar. Click on the "New Project" button to create a project with the following details:
-
-<!-- Add image: Creating a new project on Amplitude -->
-
-4. Select the data source and SDK to use. In this case case, we'll be using the browser SDK.
-
-<!-- TD: Add image here -->
-
-5. To view the click events from each button on the landing page, we'll need to create a chart to visualize the clicks from each button. Click the "Create" button on the top left corner and select "Chart":
-
-<!-- TODO: Add image of sidebar for creating a new chart -->
-
-6. Choose "Segmentation" so that the chart can segment events based on filters and metrics.
 
 ## Run the app
 
