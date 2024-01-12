@@ -50,9 +50,9 @@
             </div>
             <div class="cta-button-wrapper">
               <% if @is_my_feature_flag_enabled %>
-                <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
-              <% else %>
                 <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Download Now</button>
+              <% else %>
+                <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
               <% end %>
             </div>
           </div>

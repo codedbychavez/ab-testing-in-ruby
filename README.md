@@ -54,9 +54,9 @@ With the power of a feature flag and user segmentation, we can simply have a sin
 ```html
 <div class="cta-button-wrapper">
     <% if @is_my_feature_flag_enabled %>
-        <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
-    <% else %>
         <button class="button red-button" id="redCTAButton" onclick="trackRedCTAButtonClick()">Download Now</button>
+    <% else %>
+        <button class="button white-button" id="whiteCTAButton" onclick="trackWhiteCTAButtonClick()">Download Now</button>
     <% end %>
 </div>
 ```
@@ -204,7 +204,7 @@ But there is one more thing we need to do. We need to track the number of clicks
   </head>
 ```
 
-9. Before the closing body tag, add the following scripts for tracking the clicks from each button:
+9. Before the closing body tag, add the following script for tracking the clicks from each button:
 
 ```html
 <body>
@@ -219,39 +219,25 @@ But there is one more thing we need to do. We need to track the number of clicks
     </body>
 ```
 
+From the above you can see that the white button will send an event called `WHITE_CTA_BUTTON_CLICKED` and the red button will send an event called `RED_CTA_BUTTON_CLICKED`. This is how we'll be able to differentiate the clicks from each button.
+
 <!-- todo: add the link to the index.erb file here from the configcat code sample repo -->
 The complete code for `index.erb` can be found [here]('').
 
+#### Viewing the results in Amplitude
 
+1. Modify the the user object so that the country is set to Hungary, click the white button five times. Do the same for France and the red button. If all goes well, you should see both events in Amplitude.
 
-<!-- todo:
+Keep in mind that it may take a few minutes for the events to show up in Amplitude and you'll need to select the correct options in the left sidebar to see the events as shown below:
 
-- Adding the SDK to the project
+<!-- image: amplitude-chart-ab-comparison -->
 
-- Creating a chart to visualize the results
-
-- Sending the results to amplitude
-
-- Viewing the results on amplitude, filtering by uniques
-
-- How to know which version is better
-
- -->
-
-## Best practices and tips
+Based on the results of the chart, we can see that the red button has a higher conversion rate than the white button. This means that the red button is more effective at getting users to click on it. This is a good indicator that the red button is the better option and version B should be the one to be deployed to all users.
 
 ## Conclusion
 
-<!-- todo: call to action -->
+In this tutorial, we learned how to implement A/B testing in Ruby using ConfigCat Feature Flags and Amplitude Data Analytics Platform. We learned how to create a feature flag in ConfigCat, how to segment users into groups, how to integrate the feature flag into the Ruby code, and how to track the results with Amplitude. We also learned how to use the results to make a decision on which version of the landing page to deploy to all users.
 
-### Other stuff
+If you decide to tinker and try implementing this on your own, I'd recommend signing up for a [free account on ConfigCat](https://app.configcat.com/auth/signup) and [Amplitude](https://amplitude.com/). ConfigCat has a generous free tier that allows you to start using feature flags for free.
 
-<!-- TODO: May need to reuse the Amplitude stuff below -->
-
-Here we're going to use a simple framework called Sinatra to create a simple landing page with a white colored Call to action button. We will use ConfigCat to change the color of the button to red and track the conversion rate of the two variants with Amplitude.
-
-## Run the app
-
-```sh
-ruby landing_page.rb
-```
+stay on top of the latest posts and announcements from ConfigCat on [X](https://twitter.com/configcat), [Facebook](https://www.facebook.com/configcat), [LinkedIn](https://www.linkedin.com/company/configcat/), and [GitHub](https://github.com/configcat).
