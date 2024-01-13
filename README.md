@@ -33,7 +33,7 @@ But how to record and track which version of the landing page is performing bett
 
 ### What is Amplitude?
 
-Amplitude is a data analytics platform that allows you to track user behavior and analyze the results. We'll use Amplitude to track the number of user downloads influenced by each version of the landing page. We'll also use it to analyze and visualize the results. While most of the design of both versions of the landing page is consistent with the exception of the color of the call to action button, I'll set up an event tracker on each button. Version A's button will send an event called `WHITE_CTA_BUTTON_CLICKED` and Version B's button will send an event called `RED_CTA_BUTTON_CLICKED`.
+Amplitude is a data analytics platform that allows you to track user behavior and analyze the results. We'll use Amplitude to track the number of user downloads influenced by each version of the landing page. We'll also use it to analyze and visualize the results. While most of the design of both versions of the landing page is consistent with the exception of the color of the call to action button, I'll set up an event tracker on each button. Version A's button will send an event called `WHITE_CTA_BUTTON_CLICKED` and Version B's button will send an event called `RED_CTA_BUTTON_CLICKED`. More on this later.
 
 Before diving into the code, let take a look at the resources we'll need to get started.
 
@@ -166,7 +166,7 @@ end
 
 ### Did it work?
 
-This is a good way to see if the feature flag is working as expected. If all goes well, you should see the two versions of the landing page when you update the country in the user object.
+A good way to see if the feature flag and user segment is working as expected is to update the country in the user object.
 
 When France is set as the country, you should see Version B (red CTA button):
 
@@ -234,7 +234,7 @@ The complete code for `index.erb` can be found [here]('').
 
 #### Viewing the results in Amplitude
 
-1. Modify the the user object so that the country is set to Hungary, click the white button five times. Do the same for France and the red button. If all goes well, you should see both events in Amplitude.
+Modify the the user object so that the country is set to Hungary, click the white button five times. Do the same for France and the red button. If all goes well, you should see both events in Amplitude.
 
 Keep in mind that it may take a few minutes for the events to show up in Amplitude and you'll need to select the correct options in the left sidebar to see the events as shown below:
 
